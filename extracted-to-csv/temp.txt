@@ -1,0 +1,2 @@
+COUNTY,DATE,TOTAL,HOUSE-HOLD,GROUP QUARTERS,TOTAL,SINGLE,MULTI-PLE,MOBILE HOMES,OCCU-PIED,VACANCY RATE,
+County / City,Total,Household,Group Quarters,Total,Single Detached,Single Attached,Two to Four,Five Plus,Mobile Homes,Occupied,Vacancy Rate,Persons per Household
