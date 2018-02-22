@@ -29,7 +29,7 @@ for row in rdr:
         ratio1990 = float(pop1990) / float(hous1990) if hous1990 > 0 else 0
         popChange = stoi(row['population']) - pop1990
         housChange = stoi(row['housing units']) - hous1990
-        unitsNeeded = float(popChange) / ratio1990 if ratio1990 > 0 else 0
+        unitsNeeded = float(popChange) / ratio1990 - housChange if ratio1990 > 0 else 0
         output.append([
             row['county'],
             row['city'],
