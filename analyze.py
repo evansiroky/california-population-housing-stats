@@ -24,8 +24,8 @@ output_most_recent_year = [header_row]
 cities1990 = dict()
 cities_last_year = dict()
 
-last_year_date = '1/1/2017'
-most_recent_date = '1/1/2018'
+last_year_date = '1/1/2018'
+most_recent_date = '1/1/2019'
 
 def stoi(v):
     return int(v.replace(',', ''))
