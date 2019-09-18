@@ -87,7 +87,7 @@ def addPost2010Row(county, year, row):
         row[11]
     ])
 
-for n in range(1, 9):
+for n in range(0, 10):
     year = '201{0}'.format(n)
     file = os.path.join('extracted-to-csv', '201{0}.csv'.format(n))
     rdr = csv.reader(open(file))

@@ -7,6 +7,8 @@ header_row = [
     'city',
     'end year population',
     'end year housing units',
+    'end year pop to housing ratio',
+    'pct change of pop to housing unit ratio',
     'pop change',
     'housing change',
     'multi-family change',
@@ -41,6 +43,8 @@ def compare_years (city_key, lookup, current_year, output):
     pop_change = pop_cur_year - pop_past
     hous_cur_year = stoi(current_year['housing units'])
     housing_unit_change = hous_cur_year - hous_past
+    pop_to_housing_ratio_cur_year = float(pop_cur_year) / float(hous_cur_year) if hous_cur_year > 0 else 0
+    pop_to_housing_unit_ratio_change = (pop_to_housing_ratio_cur_year - ratio_past) / ratio_past if ratio_past != 0 else 0
     multi_family_change = stoi(current_year['Multi-family']) - multi_family_past
     unitsNeeded = float(pop_change) / ratio_past - housing_unit_change if ratio_past > 0 else 0
     output.append([
@@ -48,6 +52,8 @@ def compare_years (city_key, lookup, current_year, output):
         current_year['city'],
         pop_cur_year,
         hous_cur_year,
+        pop_to_housing_ratio_cur_year,
+        pop_to_housing_unit_ratio_change,
         pop_change,
         housing_unit_change,
         multi_family_change,
