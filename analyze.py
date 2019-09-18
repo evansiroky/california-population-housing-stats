@@ -73,7 +73,7 @@ for row in rdr:
         compare_years(city_key, cities1990, row, output_1990_to_present)
         compare_years(city_key, cities_last_year, row, output_most_recent_year)
 
-wrtr = csv.writer(open('ranked-1990-2018.csv', 'w'))
+wrtr = csv.writer(open('ranked-1990-2019.csv', 'w'))
 wrtr.writerows(output_1990_to_present)
 
 wrtr = csv.writer(open('ranked-most-recent-year.csv', 'w'))
