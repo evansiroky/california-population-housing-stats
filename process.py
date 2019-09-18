@@ -19,6 +19,8 @@ output = [[
 ############################################################
 
 def addPre2010Row(filename, county, city, row):
+    if (row[1] == '1/1/2010'):
+        return
     output.append([
         county,
         city,
