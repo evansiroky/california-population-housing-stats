@@ -1,6 +1,11 @@
 import csv
 import os
 
+############################################################
+# This script processes the extracted csv data and outputs
+# the data into the combined-data.csv file.
+############################################################
+
 output = [[
     "county",
     "city",
@@ -14,6 +19,9 @@ output = [[
     "vacancy rate"
 ]]
 
+def parseNumberWithCommas(s):
+    return int(s.replace(',', ''))
+
 ############################################################
 ############# ETL pre 2010 files #############
 ############################################################
@@ -22,16 +30,16 @@ def addPre2010Row(filename, county, city, row):
     if (row[1] == '1/1/2010'):
         return
     output.append([
-        county,
-        city,
-        row[1],
-        row[2],
-        row[5],
-        row[6],
-        row[7],
-        row[8],
-        row[9],
-        row[10 if filename == '1990-2000.csv' else 11]
+        county, # county
+        city, # city
+        row[1], # date
+        row[2], # population
+        row[5], # housing units
+        row[6], # single family
+        row[7], # multi family
+        row[8], # mobile homes
+        row[9], # occupied
+        row[10 if filename == '1990-2000.csv' else 11] # vacancy rate
     ])
 
 for file in ['1990-2000.csv', '2000-2010.csv']:
@@ -72,21 +80,21 @@ for file in ['1990-2000.csv', '2000-2010.csv']:
         lastRow = row
 
 ############################################################
-############# ETL post 2010 files #############
+############# ETL 2010-2019 files #############
 ############################################################
 
-def addPost2010Row(county, year, row):
+def add2010sRow(county, year, row):
     output.append([
-        county,
-        row[0].strip().replace('Incorporated Total', 'Incorporated'),
-        "1/1/{0}".format(year),
-        row[1],
-        row[4],
-        int(row[5].replace(',', '')) + int(row[6].replace(',', '')),
-        int(row[7].replace(',', '')) + int(row[8].replace(',', '')),
-        row[9],
-        row[10],
-        row[11]
+        county, # county
+        row[0].strip().replace('Incorporated Total', 'Incorporated'), # city
+        "1/1/{0}".format(year), # date
+        row[1], # population
+        row[4], # housing units
+        parseNumberWithCommas(row[5]) + parseNumberWithCommas(row[6]), # single family
+        parseNumberWithCommas(row[7]) + parseNumberWithCommas(row[8]), # multi family
+        row[9], # mobile homes
+        row[10], # occupied
+        row[11] # vacancy rate
     ])
 
 for n in range(0, 10):
@@ -112,17 +120,50 @@ for n in range(0, 10):
         if collectingCountyData:
             if row[0].strip() == 'County Total' or row[0].strip() == 'San Francisco':
                 collectingCountyData = False
-                addPost2010Row(curCounty, year, row)
+                add2010sRow(curCounty, year, row)
             elif row[0].strip() == '':
                 continue
             else:
-                addPost2010Row(curCounty, year, row)
+                add2010sRow(curCounty, year, row)
         else:
             if row[0] == '':
                 continue
             else:
                 collectingCountyData = True
                 curCounty = row[0].strip().replace(' County', '')
+
+############################################################
+############# ETL post 2020 files #############
+############################################################
+
+for year in range(2020, 2022):
+    file = os.path.join('extracted-to-csv', '{0}.csv'.format(year))
+    rdr = csv.reader(open(file))
+
+    searchingForFirstCity = True
+
+    for row in rdr:
+        if searchingForFirstCity:
+            if row[0] == 'Alameda ':
+                searchingForFirstCity = False
+            else:
+                continue
+
+        if row[0] == '':
+            continue
+
+        output.append([
+            row[0].strip(), # county
+            row[1].strip(), # city
+            "1/1/{0}".format(year), # date
+            row[2], # population
+            row[5], # housing units
+            parseNumberWithCommas(row[6]) + parseNumberWithCommas(row[7]), # single family
+            parseNumberWithCommas(row[8]) + parseNumberWithCommas(row[9]), # multi family
+            row[10], # mobile homes
+            row[11], # occupied
+            row[12] # vacancy rate
+        ])
 
 # write all data to one file
 wrtr = csv.writer(open('combined-data.csv', 'w'))

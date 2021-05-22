@@ -1,5 +1,10 @@
 import csv
 
+############################################################
+# This script processes the combined csv data and outputs
+# the data into the ranked*.csv files.
+############################################################
+
 rdr = csv.DictReader(open('combined-data.csv'))
 
 header_row = [
@@ -25,7 +30,7 @@ cities1990 = dict()
 cities_last_year = dict()
 
 last_year_date = '1/1/2018'
-most_recent_date = '1/1/2019'
+most_recent_date = '1/1/2021'
 
 def stoi(v):
     return int(v.replace(',', ''))
@@ -73,7 +78,7 @@ for row in rdr:
         compare_years(city_key, cities1990, row, output_1990_to_present)
         compare_years(city_key, cities_last_year, row, output_most_recent_year)
 
-wrtr = csv.writer(open('ranked-1990-2019.csv', 'w'))
+wrtr = csv.writer(open('ranked-1990-2021.csv', 'w'))
 wrtr.writerows(output_1990_to_present)
 
 wrtr = csv.writer(open('ranked-most-recent-year.csv', 'w'))
